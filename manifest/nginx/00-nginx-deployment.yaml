@@ -22,7 +22,7 @@ spec:
         image:  nginx:1.30.0-trixie
         resources:
           requests:
-            cpu: 100m
+            cpu: 50m
             memory: 100Mi
           limits:
             cpu: 100m
