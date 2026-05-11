@@ -29,7 +29,7 @@ spec:
             memory: 100Mi
         livenessProbe:
           httpGet:
-            path: /
+            path: /health
             port: 80
           initialDelaySeconds: 5
           timeoutSeconds: 5
@@ -38,7 +38,7 @@ spec:
           periodSeconds: 10
         readinessProbe:
           httpGet:
-            path: /
+            path: /health
             port: 80
           initialDelaySeconds: 5
           timeoutSeconds: 2
