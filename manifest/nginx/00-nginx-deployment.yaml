@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  nginx-proxy
+  namespace: sify-kt
+  labels:
+    app:  nginx-proxy
+spec:
+  selector:
+    matchLabels:
+      app: nginx-proxy
+  replicas: 3
+
+  template:
+    metadata:
+      labels:
+        app:  nginx-proxy
+    spec:
+
+      containers:
+      - name:  nginx-proxy
+        image:  nginx:1.30.0-trixie
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          timeoutSeconds: 2
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+
+        ports:
+        - containerPort:  80
+          name:  nginx-proxy 
+        volumeMounts: 
+          - name : nginx-conf
+            mountPath : /etc/nginx/conf.d
+      volumes: 
+        - name: nginx-conf    
+          configMap: 
+            name : nginx-cm     
+
+
+

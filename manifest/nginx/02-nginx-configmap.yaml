@@ -1,0 +1,14 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nginx-cm
+  namespace: sify-kt
+data:
+    default.conf: |
+      server {
+        listen 80;
+
+        location /api/ {
+          proxy_pass http://flask-api-service:5000/;
+        }
+      }
