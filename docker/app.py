@@ -6,7 +6,6 @@ app = Flask(__name__)
 
 FILE = "/data/items.json"
 
-# To check for the file readiness
 
 def read_data():
     if os.path.exists(FILE):
@@ -14,18 +13,25 @@ def read_data():
             return json.load(f)
     return []
 
+
 def write_data(data):
     with open(FILE, "w") as f:
         json.dump(data, f)
 
-# Adding Method for GET 
 
+# Health Probe Endpoint
+@app.route("/health", methods=["GET"])
+def health():
+    return {"status": "UP"}, 200
+
+
+# GET
 @app.route("/api", methods=["GET"])
 def get_items():
     return {"data": read_data()}
 
-#Adding Method for POST 
 
+# POST
 @app.route("/api", methods=["POST"])
 def add_item():
     items = read_data()
@@ -37,6 +43,8 @@ def add_item():
 
     return {"message": "added"}
 
+
+# PUT
 @app.route("/api/<int:id>", methods=["PUT"])
 def update_item(id):
     items = read_data()
@@ -49,8 +57,8 @@ def update_item(id):
 
     return {"message": "updated"}
 
-# Adding Method for Deletion
 
+# DELETE
 @app.route("/api/<int:id>", methods=["DELETE"])
 def delete_item(id):
     items = read_data()
@@ -62,5 +70,6 @@ def delete_item(id):
     write_data(items)
 
     return {"message": "deleted"}
+
 
 app.run(host="0.0.0.0", port=5000)
