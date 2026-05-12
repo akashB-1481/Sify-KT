@@ -29,7 +29,7 @@ spec:
           livenessProbe:
             httpGet:
               path: /health
-              port: 80
+              port: 5000
             initialDelaySeconds: 5
             timeoutSeconds: 5
             successThreshold: 1
@@ -37,8 +37,8 @@ spec:
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /healthz
-              port: 80
+              path: /health
+              port: 5000
             initialDelaySeconds: 5
             timeoutSeconds: 2
             successThreshold: 1
