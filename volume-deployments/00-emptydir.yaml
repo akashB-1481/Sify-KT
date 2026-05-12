@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-api
+  namespace: sify-kt
+  labels:
+    app: flask-api
+spec:
+  selector:
+    matchLabels:
+      app: flask-api
+  replicas: 2
+
+  template:
+    metadata:
+      labels:
+        app: flask-api
+    spec:
+      containers:
+        - name: flask-api
+          image: aakashb1408/flask-http-kt:v1.1
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 50m
+              memory: 50Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            initialDelaySeconds: 5
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
+
+          ports:
+            - containerPort: 5000
+              name: flask-api
+          volumeMounts:
+            - name: flask-api-volume
+              mountPath: /data
+      volumes:
+        - name: flask-api-volume
+          emptyDir: {}
