@@ -1,0 +1,34 @@
+# 1. Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: postgres-demo
+
+---
+# 2. Secret for PostgreSQL password
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-secret
+  namespace: postgres-demo
+type: Opaque
+data:
+  # echo -n 'postgrespass' | base64
+  POSTGRES_PASSWORD: cG9zdGdyZXNwYXNz
+  POSTGRES_USER: cG9zdGdyZXM=
+
+---
+# 3. Headless Service (required for StatefulSet DNS)
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-headless
+  namespace: postgres-demo
+spec:
+  clusterIP: None # Makes it headless
+  selector:
+    app: postgres
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
